@@ -56,6 +56,12 @@ If you've ever wondered _“What actually happens when I run `git commit`?”_, 
 
 ---
 
+## Getting Started
+
+Before starting - check out our CONTRIBUTING.md to get a refresher on contribution and general workflow.
+
+---
+
 ## Tech Stack
 
 ### **Language**
