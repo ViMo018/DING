@@ -18,6 +18,7 @@ def parse_args():
 
 
 def main():
+<<<<<<< HEAD
     print("Ding Dong, who's there? \n cow says \n cow says who? \n no cow says moo")
     args = parse_args()
     args.func(args)
@@ -25,3 +26,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+=======
+    print("Ding Dong, who's there \nMeow Meow\n")
+>>>>>>> 6bdb73d (Changes)
