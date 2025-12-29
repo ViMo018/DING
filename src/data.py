@@ -52,6 +52,7 @@ def hash_objects(args):
         return
 
     oid = hashlib.sha256(content).hexdigest()
+    print(oid)
     object_file_path = os.path.join(objects_path, oid)
     with open(object_file_path, "wb") as f:
         f.write(content)
