@@ -7,7 +7,7 @@ def init():
     ding_path = os.path.join(cwd, Ding_dir)
 
     if os.path.exists(ding_path):
-        print("It is a ding repository")
+        print("It is already ding repository")
         return
 
     os.mkdir(ding_path)
