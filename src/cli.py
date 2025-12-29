@@ -1,7 +1,8 @@
 import argparse
+from src import data
 
 def init(args):
-    print("To be implemented")
+    data.init()
 
 def parse_args():
     parser= argparse.ArgumentParser(prog="ding")
