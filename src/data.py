@@ -75,6 +75,47 @@ def hash_objects(filename):
         f.write(compressed_data)
 
 
-def decompress(hash):
+def decompress(search_hash):
+    repo = repo_path()
+    if repo is None:
+        print("error: not a ding repository")
+        return
     
-    pass
+    ding_path = os.path.join(repo, DING_DIR)
+
+    objects_path = os.path.join(ding_path, "objects")
+    if not os.path.exists(objects_path):
+        os.mkdir(objects_path)
+
+    hashes = []
+    for entry in os.listdir(objects_path):
+        full_path = os.path.join(objects_path, entry)
+        if os.path.isfile(full_path):
+            hashes.append(entry)
+
+    # print(hashes)
+
+    if len(hashes) < 1:
+        print("error: no file has been hashed yet")
+        return
+    
+    filtered = [hash for hash in hashes if hash.startswith(search_hash)]
+
+    if len(filtered) < 1:
+        print(f"error: no hash matches the search-hash: {search_hash}")
+        return
+
+    if len(filtered) > 1:
+        print("Multiple files found:")
+        for hash in filtered:
+            print(f"- {hash}")
+        return
+    
+    hash = filtered[0]
+
+    print(f"Selected hash: {hash}\n")
+
+    full_path = os.path.join(objects_path, hash)
+    with compression.zstd.open(full_path, "rb") as f:
+        read_data = f.read()
+    print(read_data.decode('utf-8'))
