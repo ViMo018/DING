@@ -1,5 +1,8 @@
 import os
 import hashlib
+import compression.zstd
+import sys
+
 
 DING_DIR = ".ding"
 
@@ -44,18 +47,18 @@ def repo_path():
     return None
 
 
-def hash_objects(args):
+def hash_objects(filename):
     repo = repo_path()
     if repo is None:
-        print("error: not inside a ding repository")
+        print("error: not a ding repository")
         return
+    
     ding_path = os.path.join(repo, DING_DIR)
 
     objects_path = os.path.join(ding_path, "objects")
     if not os.path.exists(objects_path):
         os.mkdir(objects_path)
 
-    filename = args.file
     try:
         with open(filename, "rb") as f:
             content = f.read()
@@ -65,6 +68,55 @@ def hash_objects(args):
 
     oid = hashlib.sha256(content).hexdigest()
     print(oid)
+
+    compressed_data = compression.zstd.compress(content)
+
     object_file_path = os.path.join(objects_path, oid)
     with open(object_file_path, "wb") as f:
-        f.write(content)
+        f.write(compressed_data)
+
+
+def decompress(search_hash):
+    repo = repo_path()
+    if repo is None:
+        print("error: not a ding repository")
+        return
+    
+    ding_path = os.path.join(repo, DING_DIR)
+
+    objects_path = os.path.join(ding_path, "objects")
+    if not os.path.exists(objects_path):
+        os.mkdir(objects_path)
+
+    hashes = []
+    for entry in os.listdir(objects_path):
+        full_path = os.path.join(objects_path, entry)
+        if os.path.isfile(full_path):
+            hashes.append(entry)
+
+    # print(hashes)
+
+    if len(hashes) < 1:
+        print("error: no file has been hashed yet")
+        return
+    
+    filtered = [hash for hash in hashes if hash.startswith(search_hash)]
+
+    if len(filtered) < 1:
+        print(f"error: no hash matches the search-hash: {search_hash}")
+        return
+
+    if len(filtered) > 1:
+        print("Multiple files found:")
+        for hash in filtered:
+            print(f"- {hash}")
+        return
+    
+    hash = filtered[0]
+
+    print(f"Selected hash: {hash}\n")
+
+    full_path = os.path.join(objects_path, hash)
+    with compression.zstd.open(full_path, "rb") as f:
+        read_data = f.read()
+    sys.stdout.buffer.write(read_data)
