@@ -1,5 +1,5 @@
-# import argparse
-# from src import data
+import argparse
+from src import data
 
 
 def init(args):
@@ -50,7 +50,8 @@ def parse_args():
 
 
 def main():
-    print("Ding Dong, who's there?\nDing\nDing who?\nDing dong!")
+    args = parse_args()
+    args.func(args)
 
 
 if __name__ == "__main__":
