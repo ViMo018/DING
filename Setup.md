@@ -9,7 +9,7 @@ You should have:
 - Git (to clone the repo)
 
 ## Setup
-git clone https://github.com/opencodeiiita/DING.git
+git clone https://github.com/opencodeiiita/DING.git <br>
 cd DING
 
 ### To Setup a Virtual Environment
